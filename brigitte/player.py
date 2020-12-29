@@ -1,5 +1,5 @@
 import uuid
-from brigitte import card
+from brigitte.card import Card
 
 
 class Player(object):
@@ -97,10 +97,10 @@ class Player(object):
             return None
 
         player = cls(player_dict['name'], player_dict['id'])
-        player._hand = list(map(lambda card_dict: card.Card.from_dict(card_dict), player_dict['hand']))
-        player._blind_cards = list(map(lambda card_dict: card.Card.from_dict(card_dict), player_dict['blind_cards']))
+        player._hand = list(map(lambda card_dict: Card.from_dict(card_dict), player_dict['hand']))
+        player._blind_cards = list(map(lambda card_dict: Card.from_dict(card_dict), player_dict['blind_cards']))
         player._visible_cards = list(
-            map(lambda card_dict: card.Card.from_dict(card_dict), player_dict['visible_cards']))
+            map(lambda card_dict: Card.from_dict(card_dict), player_dict['visible_cards']))
         player._ready = player_dict['ready']
 
         return player

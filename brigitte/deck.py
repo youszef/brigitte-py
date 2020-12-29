@@ -1,4 +1,4 @@
-from brigitte import card
+from brigitte.card import Card
 import random
 
 
@@ -10,7 +10,7 @@ class Deck(object):
         self._cards = []
         for value in self.PREFIX:
             for sign in self.SIGNS:
-                self._cards.append(card.Card(value, sign))
+                self._cards.append(Card(value, sign))
 
         random.shuffle(self._cards)
 

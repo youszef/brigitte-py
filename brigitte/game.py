@@ -1,5 +1,7 @@
-from brigitte import card, deck, player
-import brigitte.commands.pile as pile
+from brigitte.card import Card
+from brigitte.deck import Deck
+from brigitte.player import Player
+from brigitte.commands.pile import add_cards
 
 
 class Game(object):
@@ -8,7 +10,7 @@ class Game(object):
         self._pile = []
         self._removed_cards = []
         self._winners = []
-        self._stock = deck.Deck().cards
+        self._stock = Deck().cards
         self._game_over = False
         self._current_player = None
 
@@ -43,10 +45,10 @@ class Game(object):
     def start_new_game(self, players, player_name_key=None, player_id_key=None):
         if player_name_key and player_id_key:
             for player_dict in players:
-                self._active_players.append(player.Player(player_dict[player_name_key], player_dict[player_id_key]))
+                self._active_players.append(Player(player_dict[player_name_key], player_dict[player_id_key]))
         else:
             for player_name in players:
-                self._active_players.append(player.Player(player_name))
+                self._active_players.append(Player(player_name))
 
         self.__deal_cards()
 
@@ -69,7 +71,7 @@ class Game(object):
     def throw_cards(self, actor, thrown_cards):
         if actor != self._current_player:
             return False
-        if not pile.add_cards(actor, thrown_cards, self.pile, self._removed_cards):
+        if not add_cards(actor, thrown_cards, self.pile, self._removed_cards):
             return False
 
         self.__take_cards(actor)
@@ -117,12 +119,12 @@ class Game(object):
     def from_dict(cls, game_dict):
         game = cls()
         game._active_players = list(
-            map(lambda player_dict: player.Player.from_dict(player_dict), game_dict['active_players']))
-        game._stock = list(map(lambda card_dict: card.Card.from_dict(card_dict), game_dict['stock']))
-        game._pile = list(map(lambda card_dict: card.Card.from_dict(card_dict), game_dict['pile']))
-        game._removed_cards = list(map(lambda card_dict: card.Card.from_dict(card_dict), game_dict['removed_cards']))
-        game._current_player = player.Player.from_dict(game_dict['current_player'])
-        game._winners = list(map(lambda player_dict: player.Player.from_dict(player_dict), game_dict['winners']))
+            map(lambda player_dict: Player.from_dict(player_dict), game_dict['active_players']))
+        game._stock = list(map(lambda card_dict: Card.from_dict(card_dict), game_dict['stock']))
+        game._pile = list(map(lambda card_dict: Card.from_dict(card_dict), game_dict['pile']))
+        game._removed_cards = list(map(lambda card_dict: Card.from_dict(card_dict), game_dict['removed_cards']))
+        game._current_player = Player.from_dict(game_dict['current_player'])
+        game._winners = list(map(lambda player_dict: Player.from_dict(player_dict), game_dict['winners']))
         game._game_over = game_dict['game_over']
 
     def __deal_cards(self):

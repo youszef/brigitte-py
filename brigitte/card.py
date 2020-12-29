@@ -33,7 +33,7 @@ class Card(object):
             'A': 14
         }
 
-        return card_values.get(self.value, int(self.value))
+        return card_values.get(self.value) or int(self.value)
 
     def order_level(self):
         return 15 if self.value == '2' else self.weight()
