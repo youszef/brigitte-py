@@ -1,11 +1,11 @@
 import uuid
-import card
+from brigitte import card
 
 
 class Player(object):
-    def __init__(self, name, id=None):
+    def __init__(self, name, identifier=None):
         self._name = name
-        self._id = id or str(uuid.uuid4())
+        self._id = identifier or str(uuid.uuid4())
         self._hand = []
         self._blind_cards = []
         self._visible_cards = []
@@ -15,22 +15,26 @@ class Player(object):
         return False if other is None else self.id == other.id
 
     def swap(self, hand_card, visible_card):
-        if self.is_ready: return
+        if self.is_ready:
+            return
 
         hand_card_index = self.hand.index(hand_card)
         visible_card_index = self.visible_cards.index(visible_card)
-        if hand_card_index or visible_card_index: return
+        if hand_card_index or visible_card_index:
+            return
 
         self.visible_cards[visible_card_index] = hand_card
         self.hand[hand_card_index] = visible_card
 
-
     def pull_blind_card(self, index):
-        if self.hand: return False
-        if self.visible_cards: return False
+        if self.hand:
+            return False
+        if self.visible_cards:
+            return False
 
         blind_card = self.blind_cards[index]
-        if not blind_card: return False
+        if not blind_card:
+            return False
 
         self.blind_cards[index] = None
         self.hand.append(blind_card)
@@ -38,12 +42,12 @@ class Player(object):
         return True
 
     def sort_hand(self):
-        self._hand.sort(key=lambda card: card.value)
+        self._hand.sort(key=lambda hand_card: hand_card.value)
 
-    def throw(self, card):
+    def throw(self, hand_card):
         try:
-            self._hand.remove(card)
-            return card
+            self._hand.remove(hand_card)
+            return hand_card
         except ValueError:
             return None
 
@@ -54,6 +58,7 @@ class Player(object):
     @property
     def ready(self):
         return self._ready
+
     is_ready = ready
 
     @property
@@ -80,7 +85,7 @@ class Player(object):
         return {
             'id': self.id,
             'name': self.name,
-            'hand': list(map(lambda card: card.to_dict(), self.hand)),
+            'hand': list(map(lambda hand_card: hand_card.to_dict(), self.hand)),
             'blind_cards': self.blind_cards,
             'visible_cards': self.visible_cards,
             'ready': self.ready
@@ -88,12 +93,14 @@ class Player(object):
 
     @classmethod
     def from_dict(cls, player_dict):
-        if not player_dict: return None
+        if not player_dict:
+            return None
 
         player = cls(player_dict['name'], player_dict['id'])
         player._hand = list(map(lambda card_dict: card.Card.from_dict(card_dict), player_dict['hand']))
         player._blind_cards = list(map(lambda card_dict: card.Card.from_dict(card_dict), player_dict['blind_cards']))
-        player._visible_cards = list(map(lambda card_dict: card.Card.from_dict(card_dict), player_dict['visible_cards']))
+        player._visible_cards = list(
+            map(lambda card_dict: card.Card.from_dict(card_dict), player_dict['visible_cards']))
         player._ready = player_dict['ready']
 
         return player

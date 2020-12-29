@@ -1,4 +1,4 @@
-import card
+from brigitte import card
 import random
 
 

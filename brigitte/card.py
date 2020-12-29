@@ -2,10 +2,10 @@ import uuid
 
 
 class Card(object):
-    def __init__(self, value, sign, id=None):
+    def __init__(self, value, sign, identifier=None):
         self._value = str(value)
         self._sign = sign
-        self._id = id or str(uuid.uuid4())
+        self._id = identifier or str(uuid.uuid4())
 
     @property
     def value(self):
@@ -47,6 +47,7 @@ class Card(object):
 
     @classmethod
     def from_dict(cls, card_dict):
-        if not card_dict: return None
+        if not card_dict:
+            return None
 
         return cls(card_dict['value'], card_dict['sign'], card_dict['id'])
